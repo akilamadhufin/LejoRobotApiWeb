@@ -209,6 +209,75 @@ public class LegoService {
 	        em.close();
 	    }
 	}
+	
+	
+	//added these two by Yashodha
+		@Path("/setrobotvalues")
+		@POST
+		//@Consumes(MediaType.APPLICATION_JSON)
+		//@Produces(MediaType.APPLICATION_JSON)
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public RobotData setRobotValues(RobotData ob) {
+			System.out.println(ob);
+		    EntityManager em=emf.createEntityManager();
+		    em.getTransaction().begin();
+		    em.merge(ob);
+		    em.getTransaction().commit();		
+			return ob;
+		}
+		
+		//get values insert by robot 
+		@Path("/getrobotvalues")
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getRobotValues() 
+		{
+		    EntityManager em=emf.createEntityManager();
+		    try 
+		    {
+		        em.getTransaction().begin();
+		        //need to change the query after data feed is done for the robotdata table
+		        TypedQuery<LineFollow> query = em.createQuery(
+		            "SELECT f FROM LineFollow f WHERE f.Id IN (SELECT MAX(f1.Id) FROM LineFollow f1 GROUP BY f1.targetIntensity) ORDER BY f.Id DESC", 
+		            LineFollow.class);
+
+		        List<LineFollow> list = query.getResultList();
+		        em.getTransaction().commit();
+		        
+		        // Construct the plain text response
+		        StringBuilder responseBuilder = new StringBuilder();
+		        for (LineFollow lineFollow : list) 
+		        {
+		            responseBuilder.append("#").append(lineFollow.getId()).append("#")
+		                           .append(lineFollow.getTargetIntensity()).append("#")
+		                           .append(lineFollow.getLeftMotorSpeed_1()).append("#")
+		                           .append(lineFollow.getRightMotorSpeed_2()).append("#\n");
+		            System.out.println(responseBuilder);
+		        }
+		        
+		        return Response.ok(responseBuilder.toString()).build();		        
+		       
+		    } 
+		    catch (Exception e) 
+		    {
+		        if (em.getTransaction().isActive()) 
+		        {
+		            em.getTransaction().rollback();
+		        }
+		        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+		            .entity("Error occurred while retrieving data: " + e.getMessage())
+		            .build();
+		    } 
+		    
+		    finally 
+		    {
+		        em.close();
+		    }
+		}
+
+		
+
 
 
 	

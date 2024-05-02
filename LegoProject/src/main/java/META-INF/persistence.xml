@@ -6,6 +6,7 @@
 		<class>data.LineFollow</class>
 		<class>data.CurrentSpeed</class>
 		<class>data.Obstacale</class>
+		<class>data.RobotData</class>
 		
 		
 		
@@ -25,9 +26,9 @@
 <!--  ddlGeneration == database tables will be created, if they do not exist. The database show be created beforehand--> 
 	    <properties>
 		    <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-		    <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/printData" />
-		    <property name="javax.persistence.jdbc.user" value="akila" />
-		    <property name="javax.persistence.jdbc.password" value="madu" />
+		    <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/legodb" />
+		    <property name="javax.persistence.jdbc.user" value="yasho" />
+		    <property name="javax.persistence.jdbc.password" value="123456" />
  		    <property name="eclipselink.ddl-generation" value="create-tables" />
 
 		</properties>
