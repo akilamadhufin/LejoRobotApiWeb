@@ -149,11 +149,7 @@ public class LegoService {
 	         em.close();
 	     }
 	 }
-
-
-
-
-	 
+ 
 	 
 	@Path("/getfollow/{inid}")
 	@GET
@@ -170,6 +166,8 @@ public class LegoService {
 			em.getTransaction().commit();		
 			return list.toString();
 	}
+	
+	
 	@Path("/getfollow/")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -211,11 +209,10 @@ public class LegoService {
 	}
 	
 	
-	//added these two by Yashodha
+		//added these two by Yashodha
+		//Save Robot values 
 		@Path("/setrobotvalues")
 		@POST
-		//@Consumes(MediaType.APPLICATION_JSON)
-		//@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public RobotData setRobotValues(RobotData ob) {
@@ -238,22 +235,25 @@ public class LegoService {
 		    {
 		        em.getTransaction().begin();
 		        //need to change the query after data feed is done for the robotdata table
-		        TypedQuery<LineFollow> query = em.createQuery(
-		            "SELECT f FROM LineFollow f WHERE f.Id IN (SELECT MAX(f1.Id) FROM LineFollow f1 GROUP BY f1.targetIntensity) ORDER BY f.Id DESC", 
-		            LineFollow.class);
+		        TypedQuery<RobotData> query = em.createQuery(
+		            "SELECT r FROM RobotData r WHERE r.id IN (SELECT MAX(r1.id) FROM RobotData r1 GROUP BY r1.currentIntensity) ORDER BY r.id DESC",
+		        		RobotData.class);
+		        
 
-		        List<LineFollow> list = query.getResultList();
+		        List<RobotData> list = query.getResultList();
 		        em.getTransaction().commit();
 		        
 		        // Construct the plain text response
 		        StringBuilder responseBuilder = new StringBuilder();
-		        for (LineFollow lineFollow : list) 
+		        for (RobotData robotData : list) 
 		        {
-		            responseBuilder.append("#").append(lineFollow.getId()).append("#")
-		                           .append(lineFollow.getTargetIntensity()).append("#")
-		                           .append(lineFollow.getLeftMotorSpeed_1()).append("#")
-		                           .append(lineFollow.getRightMotorSpeed_2()).append("#\n");
-		            System.out.println(responseBuilder);
+		            responseBuilder.append("#").append(robotData.getId()).append("#")
+		                           .append(robotData.getCurrentIntensity()).append("#")
+		                           .append(robotData.getCurrentSpeedLeftMotor()).append("#")
+		                           .append(robotData.getCurrentSpeedRightMotor()).append("#")
+		                           .append(robotData.getCurrentSpeedLeftMotor1()).append("#")
+		                           .append(robotData.getCurrentSpeedRightMotor2()).append("#\n");
+		            
 		        }
 		        
 		        return Response.ok(responseBuilder.toString()).build();		        
@@ -275,12 +275,7 @@ public class LegoService {
 		        em.close();
 		    }
 		}
-
-		
-
-
-
-	
+			
 	@GET
     @Path("/getmotorspeeds/{leftSpeed_1}/{rightSpeed_1}/{leftSpeed_2}/{rightSpeed_2}")
     @Produces(MediaType.APPLICATION_JSON)

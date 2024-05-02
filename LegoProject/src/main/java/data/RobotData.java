@@ -72,12 +72,16 @@ public class RobotData {
     private int currentIntensity;
     private int currentSpeedLeftMotor;
     private int currentSpeedRightMotor;
+    private int currentSpeedLeftMotor1;
+    private int currentSpeedRightMotor2;
 
-    public RobotData(int currentIntensity, int currentSpeedLeftMotor, int currentSpeedRightMotor) 
+    public RobotData(int currentIntensity, int currentSpeedLeftMotor, int currentSpeedRightMotor, int currentSpeedLeftMotorOne, int currentSpeedRightMotorTwo) 
     {
         this.currentIntensity = currentIntensity;
         this.currentSpeedLeftMotor = currentSpeedLeftMotor;
         this.currentSpeedRightMotor = currentSpeedRightMotor;
+        this.currentSpeedLeftMotor1 = currentSpeedLeftMotorOne;
+        this.currentSpeedRightMotor2 = currentSpeedRightMotorTwo;
     }
 
     public RobotData() {
@@ -121,10 +125,27 @@ public class RobotData {
     {
         this.currentSpeedRightMotor = currentSpeedRightMotor;
     }
+    
 
     // toString() method
 
-    @Override
+    public int getCurrentSpeedLeftMotor1() {
+		return currentSpeedLeftMotor1;
+	}
+
+	public void setCurrentSpeedLeftMotor1(int currentSpeedLeftMotor1) {
+		this.currentSpeedLeftMotor1 = currentSpeedLeftMotor1;
+	}
+
+	public int getCurrentSpeedRightMotor2() {
+		return currentSpeedRightMotor2;
+	}
+
+	public void setCurrentSpeedRightMotor2(int currentSpeedRightMotor2) {
+		this.currentSpeedRightMotor2 = currentSpeedRightMotor2;
+	}
+
+	@Override
     public String toString() 
     {
         return "RobotData{" +
@@ -132,6 +153,8 @@ public class RobotData {
                 ", currentIntensity=" +currentIntensity +
                 ", currentSpeedLeftMotor=" + currentSpeedLeftMotor +
                 ", currentSpeedRightMotor=" + currentSpeedRightMotor +
+                ", currentSpeedLeftMotor1=" + currentSpeedLeftMotor +
+                ", currentSpeedRightMotor2=" + currentSpeedRightMotor +
                 '}';
     }
 }
