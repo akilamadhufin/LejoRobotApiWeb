@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lego Setting</title>
+    <style>
+        body {
+            background-color: #87CEEB; /* Sky light blue */
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .form-container {
+            width: 30%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider {
+            width: 100%;
+        }
+
+        .slider input {
+            width: 100%;
+        }
+
+        .radio-buttons label {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Lego Settings Form -->
+    <div class="form-container">
+        <h2>Lego Settings</h2>
+        <form id="legoSettingForm">
+            <label for="speed">Speed:</label>
+            <input type="range" id="speed" name="speed" min="0" max="300"><br><br>
+            <span id="speedDisplay"></span><br><br>
+            <div class="radio-buttons">
+                <label for="forward">Forward:</label>
+                <input type="radio" id="forward" name="direction" value="0" checked>
+                <label for="backward">Backward:</label>
+                <input type="radio" id="backward" name="direction" value="1"><br><br>
+            </div>
+
+            <br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <!-- Light Sensor Values Form -->
+    <div class="form-container">
+        <h2>Light Sensor Values</h2>
+        <form id="lightSensorForm">
+            <label for="targetIntensity1">Target Intensity 1 (0 to 100):</label>
+            <input type="range" id="targetIntensity1" name="targetIntensity1" min="0" max="100">
+            <span id="targetIntensity1Display"></span><br><br>
+
+            <label for="targetIntensity2">Target Intensity 2 (0 to 100):</label>
+            <input type="range" id="targetIntensity2" name="targetIntensity2" min="0" max="100">
+            <span id="targetIntensity2Display"></span><br><br>
+
+            <label for="targetIntensityLower">Target Intensity Lower (0 to 100):</label>
+            <input type="range" id="targetIntensityLower" name="targetIntensityLower" min="0" max="100">
+            <span id="targetIntensityLowerDisplay"></span><br><br>
+
+            <label for="targetIntensityHigher">Target Intensity Higher (0 to 100):</label>
+            <input type="range" id="targetIntensityHigher" name="targetIntensityHigher" min="0" max="100">
+            <span id="targetIntensityHigherDisplay"></span><br><br>
+
+            <h2>Scenario 1</h2>
+            <label for="leftMotorSpeed1">Left Motor Speed (0 to 300):</label>
+            <input type="range" id="leftMotorSpeed1" name="leftMotorSpeed1" min="0" max="300">
+            <span id="leftMotorSpeed1Display"></span><br><br>
+
+            <label for="rightMotorSpeed1">Right Motor Speed (0 to 300):</label>
+            <input type="range" id="rightMotorSpeed1" name="rightMotorSpeed1" min="0" max="300">
+            <span id="rightMotorSpeed1Display"></span><br><br>
+
+            <!-- Repeat for scenarios 2 to 5 -->
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <!-- Obstacle Distance Form -->
+    <div class="form-container">
+        <h2>Obstacle Distance</h2>
+        <form id="obstacleDistanceForm">
+            <label for="distance">Distance (0 to 30):</label>
+            <input type="range" id="distance" name="distance" min="0" max="30">
+            <span id="distanceDisplay"></span><br><br>
+
+            <h2>Scenario 1</h2>
+            <label for="leftMotorSpeed2">Left Motor Speed (0 to 300):</label>
+            <input type="range" id="leftMotorSpeed2" name="leftMotorSpeed2" min="0" max="300">
+            <span id="leftMotorSpeed2Display"></span><br><br>
+
+            <label for="rightMotorSpeed2">Right Motor Speed (0 to 300):</label>
+            <input type="range" id="rightMotorSpeed2" name="rightMotorSpeed2" min="0" max="300">
+            <span id="rightMotorSpeed2Display"></span><br><br>
+
+            <!-- Repeat for scenarios 2 to 4 -->
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <!-- Start Button -->
+    <div class="form-container">
+        <h2>Start/Stop Button</h2>
+        <input type="button" id="toggleRun" value="Start" onclick="toggleRun()">
+        <input type="hidden" id="run" name="run" value="0">
+        
+         
+        <p><strong>Speed:</strong> <span id="speedValue"></span></p>
+        <p><strong>Elapsed Time (seconds):</strong> <span id="elapsedTimeValue"></span></p>
+    
+        
+    </div>
+	
+    <script>
+        function toggleRun() {
+            var button = document.getElementById("toggleRun");
+            var runInput = document.getElementById("run");
+            var runValue = runInput.value === "0" ? "1" : "0"; // Toggle run value
+            var newButtonText = runValue === "0" ? "Start" : "Stop"; // Determine new button text
+
+            // Update button text and run input value
+            button.value = newButtonText;
+            runInput.value = runValue;
+
+            // Update run value in the database
+            updateRunValue(runValue);
+        }
+
+        function updateRunValue(runValue) {
+            fetch('http://your-backend-server-address:port/setrun', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ run: runValue })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch(error => console.error('Error:', error));
+        }
+        function updateValues() {
+            fetch('http://your-backend-server-address:port/getspeed')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('speedValue').textContent = data.speed;
+                    document.getElementById('elapsedTimeValue').textContent = data.elapsed_time;
+                })
+                .catch(error => console.error('Error fetching speed and elapsed time:', error));
+        }
+
+        // Update values initially and then every 5 seconds
+        updateValues();
+        setInterval(updateValues, 5000);
+
+        // Add JavaScript to update display values for each input range element here
+        // Example:
+        document.getElementById('speed').addEventListener('input', function () {
+            document.getElementById('speedDisplay').textContent = 'Speed: ' + this.value;
+        });
+
+        document.getElementById('targetIntensity1').addEventListener('input', function () {
+            document.getElementById('targetIntensity1Display').textContent = this.value;
+        });
+
+        document.getElementById('targetIntensity2').addEventListener('input', function () {
+            document.getElementById('targetIntensity2Display').textContent = this.value;
+        });
+
+        document.getElementById('targetIntensityLower').addEventListener('input', function () {
+            document.getElementById('targetIntensityLowerDisplay').textContent = this.value;
+        });
+
+        document.getElementById('targetIntensityHigher').addEventListener('input', function () {
+            document.getElementById('targetIntensityHigherDisplay').textContent = this.value;
+        });
+
+        document.getElementById('leftMotorSpeed1').addEventListener('input', function () {
+            document.getElementById('leftMotorSpeed1Display').textContent = this.value;
+        });
+
+        document.getElementById('rightMotorSpeed1').addEventListener('input', function () {
+            document.getElementById('rightMotorSpeed1Display').textContent = this.value;
+        });
+
+        document.getElementById('distance').addEventListener('input', function () {
+            document.getElementById('distanceDisplay').textContent = this.value;
+        });
+
+        document.getElementById('leftMotorSpeed2').addEventListener('input', function () {
+            document.getElementById('leftMotorSpeed2Display').textContent = this.value;
+        });
+
+        document.getElementById('rightMotorSpeed2').addEventListener('input', function () {
+            document.getElementById('rightMotorSpeed2Display').textContent = this.value;
+        });
+    </script>
+</body>
+</html>

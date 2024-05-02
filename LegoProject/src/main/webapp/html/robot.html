@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robot Settings</title>
+</head>
+<body>
+</br>
+<h2>Line Follow Data</h2>
+  <label for="targetIntensity">Target Intensity:</label>
+  <input type="range" id="targetIntensity" min="0" max="50" value="0" onchange="updateValues()">
+  <output id="targetIntensityValue">0</output><br>
+
+  <label for="LeftMotorSpeed_1">Left Motor Speed 1:</label>
+  <input type="range" id="LeftMotorSpeed_1" min="0" max="300" value="100" onchange="updateValues()">
+  <output id="LeftMotorSpeedValue_1">100</output><br>
+
+  <label for="RightMotorSpeed_1">Right Motor Speed 1:</label>
+  <input type="range" id="RightMotorSpeed_1" min="0" max="300" value="100" onchange="updateValues()">
+  <output id="RightMotorSpeedValue_1">100</output><br>
+
+  <label for="LeftMotorSpeed_2">Left Motor Speed 2:</label>
+  <input type="range" id="LeftMotorSpeed_2" min="0" max="300" value="100" onchange="updateValues()">
+  <output id="LeftMotorSpeedValue_2">100</output><br>
+
+  <label for="RightMotorSpeed_2">Right Motor Speed 2:</label>
+  <input type="range" id="RightMotorSpeed_2" min="0" max="300" value="100" onchange="updateValues()">
+  <output id="RightMotorSpeedValue_2">100</output><br>
+  
+  </br>
+  
+
+  <input type="button" value="Submit Line Follow Data" onclick="sendData()">
+  </br>
+  </br>
+  <p>Current Left Motor Speed 1: <span id="currentLeftMotorSpeed_1">-</span></p>
+  <p>Current Right Motor Speed 1: <span id="currentRightMotorSpeed_1">-</span></p>
+  <p>Current Left Motor Speed 2: <span id="currentLeftMotorSpeed_2">-</span></p>
+  <p>Current Right Motor Speed 2: <span id="currentRightMotorSpeed_2">-</span></p>
+
+
+<h2>Obstacle Detect Data</h2>
+  <!-- Add obstacle distance controls -->
+  <label for="ObstacleDistance">Obstacle Distance:</label>
+  <input type="range" id="ObstacleDistance" min="10" max="40" value="15" onchange="updateObstacleDistance()">
+  <output id="ObstacleDistanceValue">15</output><br><br>
+
+  <button onclick="sendObstacleData()">Send Obstacle Data</button>
+
+  <script>
+    function updateValues() {
+      var targetIntensity = document.getElementById("targetIntensity").value;
+      var leftMotorSpeed_1 = document.getElementById("LeftMotorSpeed_1").value;
+      var rightMotorSpeed_1 = document.getElementById("RightMotorSpeed_1").value;
+      var leftMotorSpeed_2 = document.getElementById("LeftMotorSpeed_2").value;
+      var rightMotorSpeed_2 = document.getElementById("RightMotorSpeed_2").value;
+
+      document.getElementById("targetIntensityValue").textContent = targetIntensity;
+      document.getElementById("LeftMotorSpeedValue_1").textContent = leftMotorSpeed_1;
+      document.getElementById("RightMotorSpeedValue_1").textContent = rightMotorSpeed_1;
+      document.getElementById("LeftMotorSpeedValue_2").textContent = leftMotorSpeed_2;
+      document.getElementById("RightMotorSpeedValue_2").textContent = rightMotorSpeed_2;
+    }
+
+    function sendData() {
+      var targetIntensity = document.getElementById("targetIntensity").value;
+      var leftMotorSpeed_1 = document.getElementById("LeftMotorSpeed_1").value;
+      var rightMotorSpeed_1 = document.getElementById("RightMotorSpeed_1").value;
+      var leftMotorSpeed_2 = document.getElementById("LeftMotorSpeed_2").value;
+      var rightMotorSpeed_2 = document.getElementById("RightMotorSpeed_2").value;
+
+      var data = {
+        targetIntensity: targetIntensity,
+        leftMotorSpeed_1: leftMotorSpeed_1,
+        rightMotorSpeed_1: rightMotorSpeed_1,
+        leftMotorSpeed_2: leftMotorSpeed_2,
+        rightMotorSpeed_2: rightMotorSpeed_2
+      };
+
+      var jsonData = JSON.stringify(data);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            console.log("Data sent successfully");
+          } else {
+            console.error("Error sending data");
+          }
+        }
+      };
+      xhttp.open("POST", "./../rest/legoservice/setfollow", true);
+      xhttp.setRequestHeader("Content-type", "application/json");
+      xhttp.send(jsonData);
+    }
+
+    function updateObstacleDistance() {
+      var obstacleDistance = document.getElementById("ObstacleDistance").value;
+      document.getElementById("ObstacleDistanceValue").textContent = obstacleDistance;
+    }
+
+    function sendObstacleData() {
+    	  var obstacleDistance = document.getElementById("ObstacleDistance").value;
+
+    	  var data = {
+    	    obstacleDistance: obstacleDistance
+    	  };
+
+    	  var jsonData = JSON.stringify(data);
+    	  var xhttp = new XMLHttpRequest();
+    	  xhttp.onreadystatechange = function() {
+    	    if (this.readyState == 4) {
+    	      if (this.status == 200) {
+    	        console.log("Obstacle data sent successfully");
+    	      } else {
+    	        console.error("Error sending obstacle data");
+    	      }
+    	    }
+    	  };
+    	  xhttp.open("POST", "./../rest/legoservice/setobstaclevalues", true); // Corrected path
+    	  xhttp.setRequestHeader("Content-type", "application/json");
+    	  xhttp.send(jsonData);
+    	}
+  </script>
+</body>
+</html>

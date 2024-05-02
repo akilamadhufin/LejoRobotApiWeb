@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Follow Path Settings</title>
+</head>
+<body>
+  <label for="targetIntensityRange">Target Intensity Range:</label>
+  <select id="targetIntensityRange" onchange="updateValues()">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select><br>
+
+  <label for="minIntensity">Min Intensity:</label>
+  <input type="range" id="minIntensity" min="0" max="50" value="0" onchange="updateValues()">
+  <output id="minIntensityValue">0</output><br>
+
+  <label for="maxIntensity">Max Intensity:</label>
+  <input type="range" id="maxIntensity" min="10" max="100" value="10" onchange="updateValues()">
+  <output id="maxIntensityValue">10</output><br>
+
+  <label for="LeftMotorSpeed">Left Motor Speed:</label>
+  <input type="range" id="LeftMotorSpeed" min="0" max="300" value="100" onchange="updateValues()">
+  <output id="LeftMotorSpeedValue">100</output><br>
+
+  <label for="RightMotorSpeed">Right Motor Speed:</label>
+  <input type="range" id="RightMotorSpeed" min="0" max="300" value="100" onchange="updateValues()">
+  <output id="RightMotorSpeedValue">100</output><br>
+
+  <input type="button" value="Update Settings" onclick="sendData()">
+  
+  
+    <p>Current Left Motor Speed: <span id="currentLeftMotorSpeed">-</span></p>
+  <p>Current Right Motor Speed: <span id="currentRightMotorSpeed">-</span></p>
+  
+<div>
+    <!-- Step One -->
+    <label for="StepOneLeftMotorSpeed">Step One Left Motor Speed</label>
+    <input type="range" id="StepOneLeftMotorSpeed" min="0" max="300" value="50" onchange="updateStepOneValues()">
+    <output id="StepOneLeftMotorSpeedValue">50</output>
+        
+    <label for="StepOneRightMotorSpeed">Step One Right Motor Speed</label>
+    <input type="range" id="StepOneRightMotorSpeed" min="0" max="300" value="50" onchange="updateStepOneValues()">
+    <output id="StepOneRightMotorSpeedValue">50</output>
+        
+    <label for="StepOneTimeDelay">Step One Time duration</label>
+    <input type="range" id="StepOneTimeDelay" min="0" max="3000" value="1250" step="250" onchange="updateStepOneValues()">
+    <output id="StepOneTimeDelayValue">1250</output><br><br>
+
+    <!-- Step Two -->
+    <label for="StepTwoLeftMotorSpeed">Step Two Left Motor Speed</label>
+    <input type="range" id="StepTwoLeftMotorSpeed" min="0" max="300" value="50" onchange="updateStepTwoValues()">
+    <output id="StepTwoLeftMotorSpeedValue">50</output>
+        
+    <label for="StepTwoRightMotorSpeed">Step Two Right Motor Speed</label>
+    <input type="range" id="StepTwoRightMotorSpeed" min="0" max="300" value="50" onchange="updateStepTwoValues()">
+    <output id="StepTwoRightMotorSpeedValue">50</output>
+        
+    <label for="StepTwoTimeDelay">Step Two Time duration</label>
+    <input type="range" id="StepTwoTimeDelay" min="0" max="3000" value="1250" step="250" onchange="updateStepTwoValues()">
+    <output id="StepTwoTimeDelayValue">1250</output><br><br>
+
+    <!-- Step Three -->
+    <label for="StepThreeLeftMotorSpeed">Step Three Left Motor Speed</label>
+    <input type="range" id="StepThreeLeftMotorSpeed" min="0" max="300" value="50" onchange="updateStepThreeValues()">
+    <output id="StepThreeLeftMotorSpeedValue">50</output>
+        
+    <label for="StepThreeRightMotorSpeed">Step Three Right Motor Speed</label>
+    <input type="range" id="StepThreeRightMotorSpeed" min="0" max="300" value="50" onchange="updateStepThreeValues()">
+    <output id="StepThreeRightMotorSpeedValue">50</output>
+        
+    <label for="StepThreeTimeDelay">Step Three Time duration</label>
+    <input type="range" id="StepThreeTimeDelay" min="0" max="3000" value="1250" step="250" onchange="updateStepThreeValues()">
+    <output id="StepThreeTimeDelayValue">1250</output><br><br>
+
+    <!-- Step Four -->
+    <label for="StepFourLeftMotorSpeed">Step Four Left Motor Speed</label>
+    <input type="range" id="StepFourLeftMotorSpeed" min="0" max="300" value="50" onchange="updateStepFourValues()">
+    <output id="StepFourLeftMotorSpeedValue">50</output>
+        
+    <label for="StepFourRightMotorSpeed">Step Four Right Motor Speed</label>
+    <input type="range" id="StepFourRightMotorSpeed" min="0" max="300" value="50" onchange="updateStepFourValues()">
+    <output id="StepFourRightMotorSpeedValue">50</output>
+        
+    <label for="StepFourTimeDelay">Step Four Time duration</label>
+    <input type="range" id="StepFourTimeDelay" min="0" max="3000" value="1250" step="250" onchange="updateStepFourValues()">
+    <output id="StepFourTimeDelayValue">1250</output><br><br>
+
+    <!-- Obstacal Count -->
+    <label for="ObtacalCount">Obstacal Count</label>
+    <input type="range" id="ObtacalCount" min="0" max="10" value="2" onchange="updateObstacalCount()">
+    <output id="ObtacalCountValue">2</output><br><br>
+
+    <!-- Obstacal Distance -->
+    <label for="ObtacaDistance">Obstacal Distance</label>
+    <input type="range" id="ObtacaDistance" min="10" max="40" value="15" onchange="updateObtacaDistance()">
+    <output id="ObtacaDistanceValue">15</output><br><br>
+  </div>
+
+
+    <button onclick="sendObData()">Send Data</button>
+  
+  <script>
+  
+
+  function sendObData() {
+    var StepOneLeftMotorSpeed = document.getElementById("StepOneLeftMotorSpeed").value;
+    var StepOneRightMotorSpeed = document.getElementById("StepOneRightMotorSpeed").value;
+    var StepOneTimeDelay = document.getElementById("StepOneTimeDelay").value;
+    
+    var StepTwoLeftMotorSpeed = document.getElementById("StepTwoLeftMotorSpeed").value;
+    var StepTwoRightMotorSpeed = document.getElementById("StepTwoRightMotorSpeed").value;
+    var StepTwoTimeDelay = document.getElementById("StepTwoTimeDelay").value;
+    
+    var StepThreeLeftMotorSpeed = document.getElementById("StepThreeLeftMotorSpeed").value;
+    var StepThreeRightMotorSpeed = document.getElementById("StepThreeRightMotorSpeed").value;
+    var StepThreeTimeDelay = document.getElementById("StepThreeTimeDelay").value;
+    
+    var StepFourLeftMotorSpeed = document.getElementById("StepFourLeftMotorSpeed").value;
+    var StepFourRightMotorSpeed = document.getElementById("StepFourRightMotorSpeed").value;
+    var StepFourTimeDelay = document.getElementById("StepFourTimeDelay").value;
+    var ObtacalCount = document.getElementById("ObtacalCount").value;
+    var ObtacaDistance = document.getElementById("ObtacaDistance").value;
+
+    var data = {
+      stepOneLeftMotorSpeed: StepOneLeftMotorSpeed,
+      stepOneRightMotorSpeed: StepOneRightMotorSpeed,
+      stepOneTimeDelay: StepOneTimeDelay,
+      stepTwoLeftMotorSpeed: StepTwoLeftMotorSpeed,
+      stepTwoRightMotorSpeed: StepTwoRightMotorSpeed,
+      stepTwoTimeDelay: StepTwoTimeDelay,
+      stepThreeLeftMotorSpeed: StepThreeLeftMotorSpeed,
+      stepThreeRightMotorSpeed: StepThreeRightMotorSpeed,
+      stepThreeTimeDelay: StepThreeTimeDelay,
+      stepFourLeftMotorSpeed: StepFourLeftMotorSpeed,
+      stepFourRightMotorSpeed: StepFourRightMotorSpeed,
+      stepFourTimeDelay: StepFourTimeDelay,
+      obtacalCount: ObtacalCount,
+      obtacaDistance: ObtacaDistance
+      
+      
+    };
+
+    var jsonData = JSON.stringify(data);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          console.log("Data sent successfully");
+        } else {
+          console.error("Error sending data");
+        }
+      }
+    };
+    xhttp.open("POST", "./../rest/legoservice/setobstaclevalues", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(jsonData);
+  }
+  
+  function fetchMotorSpeeds() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+              var motorSpeeds = JSON.parse(this.responseText);
+              document.getElementById("currentLeftMotorSpeed").textContent = motorSpeeds.leftMotorSpeed;
+              document.getElementById("currentRightMotorSpeed").textContent = motorSpeeds.rightMotorSpeed;
+          }
+      };
+      xhttp.open("GET", "./../rest/legoservice/getmotorspeeds", true);
+      xhttp.send();
+  }
+    // Object to store previously used values for each targetIntensityRange
+    var previousValues = {};
+
+    // Function to update the displayed values and store current values
+    function updateValues() {
+        var targetIntensityRange = document.getElementById("targetIntensityRange").value;
+        var minIntensity = document.getElementById("minIntensity").value;
+        var maxIntensity = document.getElementById("maxIntensity").value;
+        var leftMotorSpeed = document.getElementById("LeftMotorSpeed").value;
+        var rightMotorSpeed = document.getElementById("RightMotorSpeed").value;
+
+        // Update displayed values
+        document.getElementById("minIntensityValue").textContent = minIntensity;
+        document.getElementById("maxIntensityValue").textContent = maxIntensity;
+        document.getElementById("LeftMotorSpeedValue").textContent = leftMotorSpeed;
+        document.getElementById("RightMotorSpeedValue").textContent = rightMotorSpeed;
+
+        // Store current values for the selected targetIntensityRange
+        previousValues[targetIntensityRange] = {
+            minIntensity: minIntensity,
+            maxIntensity: maxIntensity,
+            leftMotorSpeed: leftMotorSpeed,
+            rightMotorSpeed: rightMotorSpeed
+        };
+    }
+
+    // Function to send data to the REST service
+    function sendData() {
+        var targetIntensityRange = document.getElementById("targetIntensityRange").value;
+        var follow = {
+            targetIntensityRange: targetIntensityRange,
+            minIntensity: document.getElementById("minIntensity").value,
+            maxIntensity: document.getElementById("maxIntensity").value,
+            leftMotorSpeed: document.getElementById("LeftMotorSpeed").value,
+            rightMotorSpeed: document.getElementById("RightMotorSpeed").value
+        };
+
+        var jsonPrey = JSON.stringify(follow);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    // Handle success response if needed
+                    console.log("Data sent successfully");
+                } else {
+                    // Handle error response if needed
+                    console.error("Error sending data");
+                }
+            }
+        };
+        xhttp.open("POST", "./../rest/legoservice/setfollow", true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send(jsonPrey);	
+    }
+    function updateStepOneValues() {
+        document.getElementById("StepOneLeftMotorSpeedValue").textContent = document.getElementById("StepOneLeftMotorSpeed").value;
+        document.getElementById("StepOneRightMotorSpeedValue").textContent = document.getElementById("StepOneRightMotorSpeed").value;
+        document.getElementById("StepOneTimeDelayValue").textContent = document.getElementById("StepOneTimeDelay").value;
+      }
+
+      function updateStepTwoValues() {
+        document.getElementById("StepTwoLeftMotorSpeedValue").textContent = document.getElementById("StepTwoLeftMotorSpeed").value;
+        document.getElementById("StepTwoRightMotorSpeedValue").textContent = document.getElementById("StepTwoRightMotorSpeed").value;
+        document.getElementById("StepTwoTimeDelayValue").textContent = document.getElementById("StepTwoTimeDelay").value;
+      }
+
+      function updateStepThreeValues() {
+        document.getElementById("StepThreeLeftMotorSpeedValue").textContent = document.getElementById("StepThreeLeftMotorSpeed").value;
+        document.getElementById("StepThreeRightMotorSpeedValue").textContent = document.getElementById("StepThreeRightMotorSpeed").value;
+        document.getElementById("StepThreeTimeDelayValue").textContent = document.getElementById("StepThreeTimeDelay").value;
+      }
+
+      function updateStepFourValues() {
+        document.getElementById("StepFourLeftMotorSpeedValue").textContent = document.getElementById("StepFourLeftMotorSpeed").value;
+        document.getElementById("StepFourRightMotorSpeedValue").textContent = document.getElementById("StepFourRightMotorSpeed").value;
+        document.getElementById("StepFourTimeDelayValue").textContent = document.getElementById("StepFourTimeDelay").value;
+      }
+
+      function updateObstacalCount() {
+        document.getElementById("ObtacalCountValue").textContent = document.getElementById("ObtacalCount").value;
+      }
+
+      function updateObtacaDistance() {
+        document.getElementById("ObtacaDistanceValue").textContent = document.getElementById("ObtacaDistance").value;
+      }
+
+    // Function to load previously used values for the selected targetIntensityRange
+    function loadPreviousValues() {
+        var targetIntensityRange = document.getElementById("targetIntensityRange").value;
+        var previous = previousValues[targetIntensityRange];
+        if (previous) {
+            document.getElementById("minIntensity").value = previous.minIntensity;
+            document.getElementById("maxIntensity").value = previous.maxIntensity;
+            document.getElementById("LeftMotorSpeed").value = previous.leftMotorSpeed;
+            document.getElementById("RightMotorSpeed").value = previous.rightMotorSpeed;
+            updateValues(); // Update displayed values
+        }
+    }
+
+    // Initialize displayed values and load previous values if available
+    updateValues();
+    document.getElementById("targetIntensityRange").addEventListener("change", loadPreviousValues);
+  </script>
+</body>
+</html>
