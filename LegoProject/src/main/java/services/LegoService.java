@@ -24,6 +24,63 @@ public class LegoService {
 	EntityManagerFactory emf=Persistence.createEntityManagerFactory("lego");	
 	
 	
+	// added by Akila
+	@Path("/setfollow")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public LineFollow setFollowValues(LineFollow ob) {
+		System.out.println(ob);
+	    EntityManager em=emf.createEntityManager();
+	    em.getTransaction().begin();
+	    em.merge(ob);
+	    em.getTransaction().commit();		
+		return ob;
+	}
+	
+	// added by Akila
+	@Path("/getfollow/")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getfollowValues() {
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        em.getTransaction().begin();
+
+	        TypedQuery<LineFollow> query = em.createQuery(
+	        		"SELECT f FROM LineFollow f ORDER BY f.Id DESC", 
+	        	    LineFollow.class);
+	        	query.setMaxResults(1);
+
+	        List<LineFollow> list = query.getResultList();
+	        em.getTransaction().commit();
+	        
+	        // Construct the plain text response
+	        StringBuilder responseBuilder = new StringBuilder();
+	        for (LineFollow lineFollow : list) {
+	            responseBuilder.append("#").append(lineFollow.getId()).append("#")                           
+	            .append(lineFollow.getLeftMotorSpeed_1()).append("#")
+                .append(lineFollow.getRightMotorSpeed_1()).append("#")
+                .append(lineFollow.getLeftMotorSpeed_2()).append("#")
+                .append(lineFollow.getRightMotorSpeed_2()).append("#")
+                .append(lineFollow.getTargetIntensity()).append("#\n");
+	        }
+	        
+	        return Response.ok(responseBuilder.toString()).build();
+	    } catch (Exception e) {
+	        if (em.getTransaction().isActive()) {
+	            em.getTransaction().rollback();
+	        }
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	            .entity("Error occurred while retrieving data: " + e.getMessage())
+	            .build();
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	
+	
 	@Path("/setrun")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -65,18 +122,7 @@ public class LegoService {
 		return ob;
 	}
 	
-	@Path("/setfollow")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public LineFollow setFollowValues(LineFollow ob) {
-		System.out.println(ob);
-	    EntityManager em=emf.createEntityManager();
-	    em.getTransaction().begin();
-	    em.merge(ob);
-	    em.getTransaction().commit();		
-		return ob;
-	}
+
 		 
 	 @Path("/getobstacle")
 	 @GET
@@ -114,45 +160,7 @@ public class LegoService {
 	     }
 	 }
  
-	@Path("/getfollow/")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response getfollowValues() {
-	    EntityManager em = emf.createEntityManager();
-	    try {
-	        em.getTransaction().begin();
 
-	        TypedQuery<LineFollow> query = em.createQuery(
-	        		"SELECT f FROM LineFollow f ORDER BY f.Id DESC", 
-	        	    LineFollow.class);
-	        	query.setMaxResults(1);
-
-	        List<LineFollow> list = query.getResultList();
-	        em.getTransaction().commit();
-	        
-	        // Construct the plain text response
-	        StringBuilder responseBuilder = new StringBuilder();
-	        for (LineFollow lineFollow : list) {
-	            responseBuilder.append("#").append(lineFollow.getId()).append("#")                           
-	            .append(lineFollow.getLeftMotorSpeed_1()).append("#")
-                .append(lineFollow.getRightMotorSpeed_1()).append("#")
-                .append(lineFollow.getLeftMotorSpeed_2()).append("#")
-                .append(lineFollow.getRightMotorSpeed_2()).append("#")
-                .append(lineFollow.getTargetIntensity()).append("#\n");
-	        }
-	        
-	        return Response.ok(responseBuilder.toString()).build();
-	    } catch (Exception e) {
-	        if (em.getTransaction().isActive()) {
-	            em.getTransaction().rollback();
-	        }
-	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-	            .entity("Error occurred while retrieving data: " + e.getMessage())
-	            .build();
-	    } finally {
-	        em.close();
-	    }
-	}
 
 	
 		//added these two by Yashodha
