@@ -77,9 +77,7 @@ public class LegoService {
 	    em.getTransaction().commit();		
 		return ob;
 	}
-	
-	
-	 
+		 
 	 @Path("/getobstacle")
 	 @GET
 	 @Produces(MediaType.TEXT_PLAIN)
@@ -116,8 +114,6 @@ public class LegoService {
 	     }
 	 }
  
-
-
 	@Path("/getfollow/")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -158,18 +154,75 @@ public class LegoService {
 	    }
 	}
 
-//	@Path("/getrun")
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public int getValues() {
-//	    EntityManager em=emf.createEntityManager();
-//	    em.getTransaction().begin();
-//	    TypedQuery<Integer> q=em.createQuery("select l.run from Runlego l order by l.Id desc", Integer.class).setMaxResults(1);
-//		List<Integer> list=q.getResultList();
-//		em.getTransaction().commit();		
-//		return list.get(0);
-//	}
 	
+		//added these two by Yashodha
+		//Save Robot values 
+		@Path("/setrobotvalues")
+		@POST
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public RobotData setRobotValues(RobotData ob) {
+			System.out.println(ob);
+		    EntityManager em=emf.createEntityManager();
+		    em.getTransaction().begin();
+		    em.merge(ob);
+		    em.getTransaction().commit();		
+			return ob;
+		}
+		
+		//get values insert by robot 
+		@Path("/getrobotvalues")
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getRobotValues() 
+		{
+		    EntityManager em=emf.createEntityManager();
+		    try 
+		    {
+		        em.getTransaction().begin();
+		        //need to change the query after data feed is done for the robotdata table
+		        TypedQuery<RobotData> query = em.createQuery(
+		            "SELECT r FROM RobotData r WHERE r.id IN (SELECT MAX(r1.id) FROM RobotData r1 GROUP BY r1.currentIntensity) ORDER BY r.id DESC",
+		        		RobotData.class);
+		        
+
+		        List<RobotData> list = query.getResultList();
+		        em.getTransaction().commit();
+		        
+		        // Construct the plain text response
+		        StringBuilder responseBuilder = new StringBuilder();
+		        for (RobotData robotData : list) 
+		        {
+		            responseBuilder.append("#").append(robotData.getId()).append("#")
+		                           .append(robotData.getCurrentIntensity()).append("#")
+		                           .append(robotData.getCurrentSpeedLeftMotor()).append("#")
+		                           .append(robotData.getCurrentSpeedRightMotor()).append("#")
+		                           .append(robotData.getCurrentSpeedLeftMotor1()).append("#")
+		                           .append(robotData.getCurrentSpeedRightMotor2()).append("#\n");
+		            
+		        }
+		        
+		        return Response.ok(responseBuilder.toString()).build();		        
+		       
+		    } 
+		    catch (Exception e) 
+		    {
+		        if (em.getTransaction().isActive()) 
+		        {
+		            em.getTransaction().rollback();
+		        }
+		        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+		            .entity("Error occurred while retrieving data: " + e.getMessage())
+		            .build();
+		    } 
+		    
+		    finally 
+		    {
+		        em.close();
+		    }
+		}
+			
+//Getrun
 	@Path("/getrun")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robot Current Details</title>
+    <style>
+        body 
+        {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 10px;
+            border-radius: 8px;
+  			border: 3px solid green;
+  			background-color:#c8ee90;
+  			height:250px;
+        }
+        .data-item 
+        {
+            margin-bottom: 10px;
+            margin-left:75px;
+        }
+        .data-label 
+        {
+            font-weight: bold;
+        }
+        
+        h2
+        {
+        	text-align:center;
+        	color:Blue;
+        }
+        
+        .btngetdetail
+        {
+        	border-radius: 8px;
+        	position: center;
+        	width:160px;
+        	background-color : black;
+        	color : white;
+        	height:40px;
+        	align-items: center;
+        }
+        
+    </style>
+</head>
+
+<body>
+<div class="container">
+	<h2>Robot Detail Display</h2>
+		<div class="data-item">
+		  	<span class="data-label">Current Intensity:</span>
+			<span id="targetIntensityValue" onchange="updateValues()">-</span>
+		  	<output id="targetIntensityValue"></output><br>
+		</div>
+		<div class="data-item">
+		  	<span class="data-label">Right Motor Speed:</span>
+		  	<span id="rightMotorSpeedValue" onchange="updateValues()">-</span>
+		  	<output id="LeftMotorSpeedValue"></output><br>
+		</div>
+		<div class="data-item">
+		  	<span class="data-label">Left Motor Speed:</span>
+		  	<span id="leftMotorSpeedValue" onchange="updateValues()">-</span>
+		  	<output id="RightMotorSpeedValue"></output><br>
+		</div>
+		<div class="data-item">
+		  	<span class="data-label">Right Motor Second Speed:</span>
+		  	<span id="rightMotorSpeedValue2" onchange="updateValues()">-</span>
+		  	<output id="LeftMotorSpeedValue2"></output><br>
+		</div>
+		<div class="data-item">
+		  	<span class="data-label">Left Motor Second Speed:</span>
+		  	<span id="leftMotorSpeedValue2" onchange="updateValues()">-</span>
+		  	<output id="RightMotorSpeedValue2"></output><br>
+		</div>
+		<div class="data-item">
+		  	<input type="button" class="btngetdetail" value="Get Robot Values" onclick="getRobotValues()">
+  		</div>
+  		
+	  <script>
+	    function getRobotValues() 
+	    {
+	      var xhttp = new XMLHttpRequest();
+	      xhttp.onreadystatechange = function() 
+	      {
+	        if (this.readyState == 4) 
+	        {
+	          if (this.status == 200) 
+	          {
+	            var data = this.responseText;
+	            updateValues(data);
+	          } 
+	          else 
+	          {
+	            console.error("Error fetching robot values");
+	          }
+	        }
+	      };
+      
+	      xhttp.open("GET", "./../rest/legoservice/getrobotvalues", true);
+	      xhttp.send();
+    }
+
+    function updateValues(data) 
+    {
+      var values = data.split('#').filter(Boolean);
+      document.getElementById("targetIntensityValue").textContent = values[1] || '-';
+      document.getElementById("LeftMotorSpeedValue").textContent = values[2] || '-';
+      document.getElementById("RightMotorSpeedValue").textContent = values[3] || '-'; 
+      document.getElementById("LeftMotorSpeedValue2").textContent = values[4] || '-'; 
+      document.getElementById("RightMotorSpeedValue2").textContent = values[5] || '-'; 
+    }
+
+  </script>
+  </div>
+</body>
+</html>
