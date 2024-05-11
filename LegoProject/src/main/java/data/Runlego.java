@@ -50,7 +50,7 @@ public class Runlego {
 	}
 	@Override
 	public String toString() {
-		return "Runlego [Id=" + Id + ", run=" + run + ", time=" + time + "]";
+		return "#" + Id + "#" + run + "#" + time;
 	}
 	
 	

@@ -37,30 +37,20 @@ public class LegoService {
 		return rl;
 	}
 	
-	@Path("/getrun")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public int getValues() {
-	    EntityManager em=emf.createEntityManager();
-	    em.getTransaction().begin();
-	    TypedQuery<Integer> q=em.createQuery("select l.run from Runlego l order by l.Id desc", Integer.class).setMaxResults(1);
-		List<Integer> list=q.getResultList();
-		em.getTransaction().commit();		
-		return list.get(0);
-	}
+
 	
-	@Path("/gettime")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Runlego getLatestRun() {
-		  EntityManager em=emf.createEntityManager();
-		    em.getTransaction().begin();
-		    TypedQuery<Runlego> query = em.createQuery("SELECT l.run FROM Runlego l ORDER BY l.time DESC", Runlego.class);
-			query.setMaxResults(1);
-			Runlego latestRunlego=query.getSingleResult();
-			em.close();
-		        return latestRunlego;
-	}
+//	@Path("/gettime")
+//	@GET
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Runlego getLatestRun() {
+//		  EntityManager em=emf.createEntityManager();
+//		    em.getTransaction().begin();
+//		    TypedQuery<Runlego> query = em.createQuery("SELECT l.run FROM Runlego l ORDER BY l.time DESC", Runlego.class);
+//			query.setMaxResults(1);
+//			Runlego latestRunlego=query.getSingleResult();
+//			em.close();
+//		        return latestRunlego;
+//	}
 	
 	@Path("/setobstaclevalues")
 	@POST
@@ -87,33 +77,7 @@ public class LegoService {
 	    em.getTransaction().commit();		
 		return ob;
 	}
-	
-	
-	@Path("/setcurrentspeed")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public CurrentSpeed setCurrentSpeed(CurrentSpeed ob) {
-		System.out.println(ob);
-	    EntityManager em=emf.createEntityManager();
-	    em.getTransaction().begin();
-	    em.merge(ob);
-	    em.getTransaction().commit();		
-		return ob;
-	}
-	
-	 @GET
-	    @Path("/latest")
-	    @Produces(MediaType.APPLICATION_JSON)
-	    public CurrentSpeed getLatestSpeeds() {
-	        EntityManager em = emf.createEntityManager();
-	        TypedQuery <CurrentSpeed> query = em.createQuery("SELECT c FROM CurrentSpeed c ORDER BY c.Id DESC", CurrentSpeed.class);
-	        query.setMaxResults(1);
-	        CurrentSpeed latestSpeed = query.getSingleResult();
-	        em.close();
-	        return latestSpeed;
-	 }
-	 
+		 
 	 @Path("/getobstacle")
 	 @GET
 	 @Produces(MediaType.TEXT_PLAIN)
@@ -150,24 +114,6 @@ public class LegoService {
 	     }
 	 }
  
-	 
-	@Path("/getfollow/{inid}")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getfollowValues(@PathParam("inid") int id) {
-		 EntityManager em=emf.createEntityManager();
-		    em.getTransaction().begin();
-		    
-		   // Query q = em.createQuery("SELECT s FROM FollowPath s WHERE s.Id IN (SELECT MAX(s1.Id) FROM FollowPath s1 GROUP BY s1.targetIntensityRange) ORDER BY s.Id DESC");
-		    Query q = em.createQuery("SELECT f FROM linefollow f WHERE f.targetIntensity= :id ORDER BY f.Id DESC ").setMaxResults(1);
-		    q.setParameter("id", id);
-
-		    List<LineFollow> list=q.getResultList();
-			em.getTransaction().commit();		
-			return list.toString();
-	}
-	
-	
 	@Path("/getfollow/")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -207,7 +153,7 @@ public class LegoService {
 	        em.close();
 	    }
 	}
-	
+
 	
 		//added these two by Yashodha
 		//Save Robot values 
@@ -276,12 +222,43 @@ public class LegoService {
 		    }
 		}
 			
+//Getrun
+	@Path("/getrun")
 	@GET
-    @Path("/getmotorspeeds/{leftSpeed_1}/{rightSpeed_1}/{leftSpeed_2}/{rightSpeed_2}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public LineFollow getMotorSpeeds(@PathParam("leftSpeed_1") int leftSpeed_1, @PathParam("rightSpeed_1") int rightSpeed_1,@PathParam("leftSpeed_2") int leftSpeed_2, @PathParam("rightSpeed_2") int rightSpeed_2) {
-        return new LineFollow(leftSpeed_1, rightSpeed_1,leftSpeed_2, rightSpeed_2);
-    }
-	
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getRunValues() {
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        em.getTransaction().begin();
+
+	        TypedQuery<Runlego> query = em.createQuery(
+	            "SELECT l FROM Runlego l ORDER BY l.Id DESC", 
+	            Runlego.class);
+	        query.setMaxResults(1);
+
+	        List<Runlego> list = query.getResultList();
+	        em.getTransaction().commit();
+	        
+	        // Construct the plain text response
+	        StringBuilder responseBuilder = new StringBuilder();
+	        for (Runlego runlego : list) {
+	            responseBuilder.append("#").append(runlego.getId()).append("#")
+	                .append(runlego.getRun()).append("#");
+	        }
+	        
+	        return Response.ok(responseBuilder.toString()).build();
+	    } catch (Exception e) {
+	        if (em.getTransaction().isActive()) {
+	            em.getTransaction().rollback();
+	        }
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	            .entity("Error occurred while retrieving data: " + e.getMessage())
+	            .build();
+	    } finally {
+	        em.close();
+	    }
+	}
+
+
 
 }

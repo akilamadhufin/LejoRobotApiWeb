@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Start/Stop Button</title>
+<script>
+function toggleRun() {
+    var button = document.getElementById("toggleRun");
+    var runInput = document.getElementById("run");
+    var runValue = runInput.value === "0" ? "1" : "0"; // Toggle run value
+    var newButtonText = runValue === "0" ? "Start" : "Stop"; // Determine new button text
+
+    // Update button text and run input value
+    button.value = newButtonText;
+    runInput.value = runValue;
+
+    // Update run value using AJAX
+    updateRunValue(runValue);
+}
+
+function updateRunValue(runValue) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {          
+        }
+    };
+    xhttp.open("POST", "./../rest/legoservice/setrun", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    var data = JSON.stringify({ "run": runValue });
+    xhttp.send(data);
+}
+</script>
+</head>
+
+<body>
+<div class="form-container">
+    <h2>Start/Stop Button</h2>
+    <input type="button" id="toggleRun" value="Start" onclick="toggleRun()">
+    <input type="hidden" id="run" name="run" value="0">
+</div>
+</body>
+</html>
