@@ -14,14 +14,14 @@ public class Obstacale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; // Changed variable name to lowercase
 
-    private int obstacleDistance; // Corrected variable name
+    private float obstacleDistance; // Corrected variable name
 
     // Constructor
     public Obstacale() {
     }
 
     // Constructor with parameters
-    public Obstacale(int id, int obstacleDistance) {
+    public Obstacale(int id, float obstacleDistance) {
         this.id = id;
         this.obstacleDistance = obstacleDistance;
     }
@@ -35,11 +35,11 @@ public class Obstacale {
         this.id = id;
     }
 
-    public int getObstacleDistance() {
+    public float getObstacleDistance() {
         return obstacleDistance;
     }
 
-    public void setObstacleDistance(int obstacleDistance) {
+    public void setObstacleDistance(float obstacleDistance) {
         this.obstacleDistance = obstacleDistance;
     }
 
