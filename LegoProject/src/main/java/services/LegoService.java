@@ -20,10 +20,12 @@ import data.*;
 
 
 @Path("/legoservice")
-public class LegoService {
+public class LegoService 
+{
 	EntityManagerFactory emf=Persistence.createEntityManagerFactory("lego");	
 	
 	
+
 	// added by Akila
 	@Path("/setfollow")
 	@POST
@@ -78,37 +80,8 @@ public class LegoService {
 	        em.close();
 	    }
 	}
-	
-	
-	
-	@Path("/setrun")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Runlego setValues(Runlego rl) {
-		System.out.println(rl);
-	    EntityManager em=emf.createEntityManager();
-	    em.getTransaction().begin();
-	    em.merge(rl);
-	    em.getTransaction().commit();		
-		return rl;
-	}
-	
 
-	
-//	@Path("/gettime")
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Runlego getLatestRun() {
-//		  EntityManager em=emf.createEntityManager();
-//		    em.getTransaction().begin();
-//		    TypedQuery<Runlego> query = em.createQuery("SELECT l.run FROM Runlego l ORDER BY l.time DESC", Runlego.class);
-//			query.setMaxResults(1);
-//			Runlego latestRunlego=query.getSingleResult();
-//			em.close();
-//		        return latestRunlego;
-//	}
-	
+//	Done by Udashi	
 	@Path("/setobstaclevalues")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -122,7 +95,6 @@ public class LegoService {
 		return ob;
 	}
 	
-
 		 
 	 @Path("/getobstacle")
 	 @GET
@@ -160,9 +132,6 @@ public class LegoService {
 	     }
 	 }
  
-
-
-	
 		//added these two by Yashodha
 		//Save Robot values 
 		@Path("/setrobotvalues")

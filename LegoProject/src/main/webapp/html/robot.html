@@ -32,15 +32,9 @@
   
   </br>
   
-
   <input type="button" value="Submit Line Follow Data" onclick="sendData()">
   </br>
   </br>
-  <p>Current Left Motor Speed 1: <span id="currentLeftMotorSpeed_1">-</span></p>
-  <p>Current Right Motor Speed 1: <span id="currentRightMotorSpeed_1">-</span></p>
-  <p>Current Left Motor Speed 2: <span id="currentLeftMotorSpeed_2">-</span></p>
-  <p>Current Right Motor Speed 2: <span id="currentRightMotorSpeed_2">-</span></p>
-
 
 <h2>Obstacle Detect Data</h2>
   <!-- Add obstacle distance controls -->
@@ -51,7 +45,8 @@
   <button onclick="sendObstacleData()">Send Obstacle Data</button>
 
   <script>
-    function updateValues() {
+    function updateValues() 
+    {
       var targetIntensity = document.getElementById("targetIntensity").value;
       var leftMotorSpeed_1 = document.getElementById("LeftMotorSpeed_1").value;
       var rightMotorSpeed_1 = document.getElementById("RightMotorSpeed_1").value;
@@ -65,7 +60,8 @@
       document.getElementById("RightMotorSpeedValue_2").textContent = rightMotorSpeed_2;
     }
 
-    function sendData() {
+    function sendData() 
+    {
       var targetIntensity = document.getElementById("targetIntensity").value;
       var leftMotorSpeed_1 = document.getElementById("LeftMotorSpeed_1").value;
       var rightMotorSpeed_1 = document.getElementById("RightMotorSpeed_1").value;
@@ -82,9 +78,12 @@
 
       var jsonData = JSON.stringify(data);
       var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
+      xhttp.onreadystatechange = function() 
+      {
+        if (this.readyState == 4) 
+        {
+          if (this.status == 200) 
+          {
             console.log("Data sent successfully");
           } else {
             console.error("Error sending data");
@@ -96,12 +95,14 @@
       xhttp.send(jsonData);
     }
 
-    function updateObstacleDistance() {
+    function updateObstacleDistance() 
+    {
       var obstacleDistance = document.getElementById("ObstacleDistance").value;
       document.getElementById("ObstacleDistanceValue").textContent = obstacleDistance;
     }
 
-    function sendObstacleData() {
+    function sendObstacleData() 
+    {
     	  var obstacleDistance = document.getElementById("ObstacleDistance").value;
 
     	  var data = {
@@ -110,15 +111,21 @@
 
     	  var jsonData = JSON.stringify(data);
     	  var xhttp = new XMLHttpRequest();
-    	  xhttp.onreadystatechange = function() {
-    	    if (this.readyState == 4) {
-    	      if (this.status == 200) {
+    	  xhttp.onreadystatechange = function() 
+    	  {
+    	    if (this.readyState == 4) 
+    	    {
+    	      if (this.status == 200) 
+    	      {
     	        console.log("Obstacle data sent successfully");
-    	      } else {
+    	      } 
+    	      else 
+    	      {
     	        console.error("Error sending obstacle data");
     	      }
     	    }
     	  };
+    	  
     	  xhttp.open("POST", "./../rest/legoservice/setobstaclevalues", true); // Corrected path
     	  xhttp.setRequestHeader("Content-type", "application/json");
     	  xhttp.send(jsonData);
