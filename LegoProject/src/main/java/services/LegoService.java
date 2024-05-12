@@ -95,7 +95,7 @@ public class LegoService
 		return ob;
 	}
 	
-		 
+	// done by Gimhani	 
 	 @Path("/getobstacle")
 	 @GET
 	 @Produces(MediaType.TEXT_PLAIN)
@@ -199,42 +199,6 @@ public class LegoService
 		    }
 		}
 			
-//Getrun
-	@Path("/getrun")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response getRunValues() {
-	    EntityManager em = emf.createEntityManager();
-	    try {
-	        em.getTransaction().begin();
-
-	        TypedQuery<Runlego> query = em.createQuery(
-	            "SELECT l FROM Runlego l ORDER BY l.Id DESC", 
-	            Runlego.class);
-	        query.setMaxResults(1);
-
-	        List<Runlego> list = query.getResultList();
-	        em.getTransaction().commit();
-	        
-	        // Construct the plain text response
-	        StringBuilder responseBuilder = new StringBuilder();
-	        for (Runlego runlego : list) {
-	            responseBuilder.append("#").append(runlego.getId()).append("#")
-	                .append(runlego.getRun()).append("#");
-	        }
-	        
-	        return Response.ok(responseBuilder.toString()).build();
-	    } catch (Exception e) {
-	        if (em.getTransaction().isActive()) {
-	            em.getTransaction().rollback();
-	        }
-	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-	            .entity("Error occurred while retrieving data: " + e.getMessage())
-	            .build();
-	    } finally {
-	        em.close();
-	    }
-	}
 
 
 
